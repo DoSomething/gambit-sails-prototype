@@ -13,7 +13,7 @@ $ npm install
 ```
 $ sails lift
 
-... or ...
+or ...
 
 $ npm start
 ```
