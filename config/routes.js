@@ -34,7 +34,7 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -45,5 +45,18 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  // Health check
+  'get /health': 'HealthController.check',
+
+  // For Mobile Commons use: transition user from one MC campaign to another
+  'post /mc/campaign-transition': 'MobileCommonsController.campaignTransition',
+
+  // For Mobile Commons use: route the user to the next message based on if
+  // they said yes or no.
+  'post /mc/yes-no-routing': 'MobileCommonsController.yesNoRouting',
+
+  // Guides the user through the reportback workflow
+  'post /reportback/:campaign': 'ReportbackController.handle',
 
 };
