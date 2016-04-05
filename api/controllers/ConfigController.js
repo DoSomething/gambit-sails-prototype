@@ -29,7 +29,8 @@ module.exports = {
     return res.view(
       'configCampaign',
       {
-        campaignName: 'new',
+        id: 'new',
+        config: null
       }
     );
   },
@@ -58,29 +59,20 @@ module.exports = {
    * Display the view to edit an existing campaign configuration.
    */
   editView: function(req, res) {
-    // @todo Could be doing something wrong, but unable to find the document
-    // by its ID. Will just loop through results and find it there instead.
-    YesNoConfig.find({}, function(err, results) {
+    YesNoConfig.findOne(req.params.campaignId, function(err, result) {
       if (err) {
         return res.status(500).send(err);
       }
 
-      let config = null;
-      for (let i = 0; i < results.length; i++) {
-        if (results[i].id === req.params.campaignId) {
-          config = results[i];
-          break;
-        }
-      }
-
-      if (!config) {
+      if (!result) {
         return res.view('404');
       }
 
       return res.view(
         'configCampaign',
         {
-          config: config
+          id: result.id,
+          config: result
         }
       );
     });
@@ -90,7 +82,23 @@ module.exports = {
    * Handle the submission request to edit an existing campaign configuration.
    */
   editSubmit: function(req, res) {
-    res.ok();
+    var updateValues = {
+      campaign: req.body['campaign-name'],
+      incomingOptInPathId: req.body['yesno-incoming-optin'],
+      yesPath: req.body['yesno-yes-optin'],
+      noPath: req.body['yesno-no-optin']
+    };
+
+    YesNoConfig.update(
+      req.params.campaignId,
+      updateValues,
+      function(err, results) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+
+        return res.redirect('/config');
+      });
   },
 
 };

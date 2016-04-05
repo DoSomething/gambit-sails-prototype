@@ -1,11 +1,24 @@
 <h2>SMS Campaign Configuration</h2>
 
-<form method="post" action="/config/new">
+<%
+  var campaignName = '';
+  var incomingPath = '';
+  var yesPath = '';
+  var noPath = '';
+  if (config) {
+    campaignName = config.campaign;
+    incomingPath = config.incomingOptInPathId;
+    yesPath = config.yesPath;
+    noPath = config.noPath;
+  }
+%>
+
+<form method="post" action="/config/<%= id %>">
 
 <div class="form-section">
   <div class="form-item">
     <label class="field-label">Campaign name:</label>
-    <input type="text" class="text-field" name="campaign-name" value="<%= config.campaign %>" required>
+    <input type="text" class="text-field" name="campaign-name" value="<%= campaignName %>" required>
   </div>
 </div>
 
@@ -37,7 +50,7 @@
       </a>
     </p>
     <label class="field-label">Incoming opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-incoming-optin" value="<%= config.incomingOptInPathId %>">
+    <input type="number" class="text-field" name="yesno-incoming-optin" value="<%= incomingPath %>">
   </div>
 
   <div class="form-item -padded">
@@ -47,7 +60,7 @@
       </a>
     </p>
     <label class="field-label">YES opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-yes-optin" value="<%= config.yesPath %>">
+    <input type="number" class="text-field" name="yesno-yes-optin" value="<%= yesPath %>">
   </div>
 
   <div class="form-item -padded">
@@ -57,7 +70,7 @@
       </a>
     </p>
     <label class="field-label">NO opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-no-optin" value="<%= config.noPath %>">
+    <input type="number" class="text-field" name="yesno-no-optin" value="<%= noPath %>">
   </div>
 </div>
 
@@ -72,3 +85,9 @@
 <input type="submit" class="button" value="Submit">
 
 </form>
+
+<div class="form-section">
+  <form method="delete" action="/config/<%= id %>">
+    <input type="submit" class="button -secondary" value="Delete">
+  </form>
+</div>

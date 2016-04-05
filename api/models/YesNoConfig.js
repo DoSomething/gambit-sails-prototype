@@ -17,7 +17,6 @@ module.exports = {
     // Opt-in path ID the user's message would be coming from.
     incomingOptInPathId: {
       type: 'integer',
-      primaryKey: true,
       unique: true,
       required: true,
     },
