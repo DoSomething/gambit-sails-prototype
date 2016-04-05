@@ -5,6 +5,8 @@
 
 'use strict';
 
+var ObjectID = require('sails-mongo/node_modules/mongodb').ObjectID;
+
 module.exports = {
 
   /**
@@ -56,12 +58,32 @@ module.exports = {
    * Display the view to edit an existing campaign configuration.
    */
   editView: function(req, res) {
-    return res.view(
-      'configCampaign',
-      {
-        campaignName: req.params.campaign,
+    // @todo Could be doing something wrong, but unable to find the document
+    // by its ID. Will just loop through results and find it there instead.
+    YesNoConfig.find({}, function(err, results) {
+      if (err) {
+        return res.status(500).send(err);
       }
-    );
+
+      let config = null;
+      for (let i = 0; i < results.length; i++) {
+        if (results[i].id === req.params.campaignId) {
+          config = results[i];
+          break;
+        }
+      }
+
+      if (!config) {
+        return res.view('404');
+      }
+
+      return res.view(
+        'configCampaign',
+        {
+          config: config
+        }
+      );
+    });
   },
 
   /**
