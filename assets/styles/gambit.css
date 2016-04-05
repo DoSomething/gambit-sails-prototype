@@ -8,6 +8,29 @@ main {
   width: 62.5%;
 }
 
+table {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  margin: 24px 0 48px 0;
+  width: 100%;
+}
+
+td {
+  padding: 6px 12px;
+}
+
+th {
+  background-color: #ccc;
+  font-weight: bold;
+  padding: 6px 12px;
+  text-align: left;
+}
+
+tr {
+  border-bottom: 1px solid #ccc;
+  padding: 12px;
+}
+
 .form-section {
   margin: 24px 0 48px 0;
 }

@@ -11,7 +11,13 @@ module.exports = {
    * Display campaigns that have configurations set.
    */
   list: function(req, res) {
-    return res.view('configList');
+    YesNoConfig.find({}, function(err, results) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+
+      return res.view('configList', {configs: results});
+    });
   },
 
   /**

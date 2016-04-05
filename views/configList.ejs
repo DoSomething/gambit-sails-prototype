@@ -2,4 +2,23 @@
   <a class="button" href="/config/new">Add New Campaign Configuration</a>
 </div>
 
-This is the config homepage
+<table>
+  <thead>
+    <th>Campaign Name</th>
+    <th>Created</th>
+    <th>Updated</th>
+  </thead>
+
+  <% for (var i = 0; i < configs.length; i++) { %>
+  <tr>
+    <td>
+      <a href="/config/<%= configs[i].id %>">
+        <%= configs[i].campaign %>
+      </a>
+    </td>
+    <td><%= (new Date(configs[i].createdAt)).toLocaleString() %></td>
+    <td><%= (new Date(configs[i].updatedAt)).toLocaleString() %></td>
+  </tr>
+  <% } %>
+
+</table>
