@@ -55,6 +55,7 @@ module.exports.routes = {
   'post /config/new': 'ConfigController.createSubmit',
   'get /config/:campaignId': 'ConfigController.editView',
   'post /config/:campaignId': 'ConfigController.editSubmit',
+  'post /config/:campaignId/delete': 'ConfigController.delete',
 
   /**
    * API routes.

@@ -87,7 +87,7 @@
 </form>
 
 <div class="form-section">
-  <form method="delete" action="/config/<%= id %>">
+  <form method="post" action="/config/<%= id %>/delete" onsubmit="return confirm('Are you sure you want to delete this config?')">
     <input type="submit" class="button -secondary" value="Delete">
   </form>
 </div>

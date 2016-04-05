@@ -101,4 +101,17 @@ module.exports = {
       });
   },
 
+  /**
+   * Removes a campaign configuration from the database.
+   */
+  delete: function(req, res) {
+    YesNoConfig.destroy(req.params.campaignId, function(err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+
+      return res.redirect('/config');
+    });
+  }
+
 };
