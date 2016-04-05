@@ -10,14 +10,14 @@ module.exports = {
   /**
    * Display campaigns that have configurations set.
    */
-  home: function(req, res) {
-    return res.view('configHome');
+  list: function(req, res) {
+    return res.view('configList');
   },
 
   /**
-   * Create a new campaign configuration.
+   * Display view to create a new campaign configuration.
    */
-  create: function(req, res) {
+  createView: function(req, res) {
     return res.view(
       'configCampaign',
       {
@@ -27,15 +27,42 @@ module.exports = {
   },
 
   /**
-   * Edit an existing campaign configuration.
+   * Handle the submission request to create a new campaign configuration.
    */
-  edit: function(req, res) {
+  createSubmit: function(req, res) {
+    var yesNoConfig = {
+      campaign: req.body['campaign-name'],
+      incomingOptInPathId: req.body['yesno-incoming-optin'],
+      yesPath: req.body['yesno-yes-optin'],
+      noPath: req.body['yesno-no-optin']
+    };
+
+    YesNoConfig.create(yesNoConfig)
+      .then(function(config) {
+        res.redirect('/config');
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
+      });
+  },
+
+  /**
+   * Display the view to edit an existing campaign configuration.
+   */
+  editView: function(req, res) {
     return res.view(
       'configCampaign',
       {
         campaignName: req.params.campaign,
       }
     );
+  },
+
+  /**
+   * Handle the submission request to edit an existing campaign configuration.
+   */
+  editSubmit: function(req, res) {
+    res.ok();
   },
 
 };

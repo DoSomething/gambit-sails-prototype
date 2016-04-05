@@ -29,12 +29,23 @@
     -->
 
     <!--STYLES-->
+    <link rel="stylesheet" href="/styles/forge.css">
+    <link rel="stylesheet" href="/styles/gambit.css">
     <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
+
   </head>
 
   <body>
-    <%- body %>
+    <header class="header">
+      <div class="wrapper">
+        <h1 class="header__title">Gambit Config</h1>
+        <p class="header__subtitle">Making the lives of an SMS team member easier one campaign at a time.</p>
+      </div>
+    </header>
+    <main class="wrapper">
+      <%- body %>
+    </main>
 
 
 
@@ -89,6 +100,9 @@
 
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery-1.12.2.min.js"></script>
+    <script src="/js/forge.js"></script>
+    <script src="/js/modernizr.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

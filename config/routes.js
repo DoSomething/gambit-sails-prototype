@@ -50,11 +50,11 @@ module.exports.routes = {
    * Admin config views.
    */
 
-  '/config': 'ConfigController.home',
-
-  '/config/new': 'ConfigController.create',
-
-  '/config/:campaign': 'ConfigController.edit',
+  '/config': 'ConfigController.list',
+  'get /config/new': 'ConfigController.createView',
+  'post /config/new': 'ConfigController.createSubmit',
+  'get /config/:campaign': 'ConfigController.editView',
+  'post /config/:campaign': 'ConfigController.editSubmit',
 
   /**
    * API routes.
