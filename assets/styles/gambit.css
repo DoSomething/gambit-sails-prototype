@@ -1,11 +1,5 @@
-body {
-  background: white;
-}
-
 main {
-  margin-left: 12.5%;
-  padding: 12px;
-  width: 62.5%;
+  padding-top: 48px;
 }
 
 table {
