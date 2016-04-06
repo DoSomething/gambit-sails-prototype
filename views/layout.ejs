@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%=typeof title == 'undefined' ? 'Gambit Config' : title%></title>
+    <title><%=typeof title == 'undefined' ? 'Gambit' : title%></title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -36,15 +36,19 @@
 
   </head>
 
-  <body>
+  <body class="chrome">
     <header class="header">
       <div class="wrapper">
-        <h1 class="header__title">Gambit Config</h1>
+        <h1 class="header__title">Gambit</h1>
         <p class="header__subtitle">Making the lives of an SMS team member easier one campaign at a time.</p>
       </div>
     </header>
     <main class="wrapper">
-      <%- body %>
+      <div class="container">
+        <div class="wrapper">
+          <%- body %>
+        </div>
+      </div>
     </main>
 
 
