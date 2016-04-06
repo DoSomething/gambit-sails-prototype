@@ -5,49 +5,80 @@
 
 'use strict';
 
-var ObjectID = require('sails-mongo/node_modules/mongodb').ObjectID;
-
 module.exports = {
 
   /**
    * Display campaigns that have configurations set.
    */
   list: function(req, res) {
-    YesNoConfig.find({}, function(err, results) {
-      if (err) {
+    CampaignConfig.find({})
+      .populateAll()
+      .then(function(results) {
+        return res.view('configList', {configs: results});
+      })
+      .catch(function(err) {
         return res.status(500).send(err);
-      }
-
-      return res.view('configList', {configs: results});
-    });
+      });
   },
 
   /**
    * Display view to create a new campaign configuration.
    */
   createView: function(req, res) {
-    return res.view(
-      'configCampaign',
-      {
-        id: 'new',
-        config: null
-      }
-    );
+    return res.view('configCampaign', {id: 'new'});
   },
 
   /**
    * Handle the submission request to create a new campaign configuration.
    */
   createSubmit: function(req, res) {
+    var ctModel;
+    var ynModel;
+    var campaignModel;
+
+    var transitionConfig = {
+      mdataId: req.body['transition-mdata'],
+      optinPathId: req.body['transition-optin'],
+      optoutCampaignId: req.body['transition-optout']
+    };
+
     var yesNoConfig = {
-      campaign: req.body['campaign-name'],
       incomingOptInPathId: req.body['yesno-incoming-optin'],
       yesPath: req.body['yesno-yes-optin'],
       noPath: req.body['yesno-no-optin']
     };
 
-    YesNoConfig.create(yesNoConfig)
-      .then(function(config) {
+    // Create the transition config
+    CampaignTransitionConfig.create(transitionConfig)
+      .then(function(model) {
+        ctModel = model;
+
+        // Create the yes/no config
+        return YesNoConfig.create(yesNoConfig);
+      })
+      .then(function(model) {
+        ynModel = model;
+
+        let config = {
+          campaign: req.body['campaign-name'],
+          transitionConfig:  ctModel.id,
+          yesNoConfig: ynModel.id
+        };
+
+        // Create the umbrella campaign config
+        return CampaignConfig.create(config);
+      })
+      .then(function(model) {
+        campaignModel = model;
+
+        // Update the yes/no config with the campaign reference
+        return YesNoConfig.update(ynModel.id, {campaign: campaignModel.id});
+      })
+      .then(function(results) {
+        // Update the transition config with the campaign reference
+        return CampaignTransitionConfig.update(ctModel.id, {campaign: campaignModel.id});
+      })
+      .then(function(results) {
         res.redirect('/config');
       })
       .catch(function(err) {
@@ -59,45 +90,61 @@ module.exports = {
    * Display the view to edit an existing campaign configuration.
    */
   editView: function(req, res) {
-    YesNoConfig.findOne(req.params.campaignId, function(err, result) {
-      if (err) {
-        return res.status(500).send(err);
-      }
-
-      if (!result) {
-        return res.view('404');
-      }
-
-      return res.view(
-        'configCampaign',
-        {
-          id: result.id,
-          config: result
+    CampaignConfig.findOne(req.params.campaignId)
+      .populateAll()
+      .then(function(result) {
+        if (!result) {
+          return res.view('404');
         }
-      );
-    });
+
+        let viewData = {};
+        viewData.id = result.id;
+        viewData.config = result;
+
+        return res.view('configCampaign', viewData);
+      })
+      .catch(function(err) {
+        return res.status(500).send(err);
+      });
   },
 
   /**
    * Handle the submission request to edit an existing campaign configuration.
    */
   editSubmit: function(req, res) {
-    var updateValues = {
-      campaign: req.body['campaign-name'],
+    var transitionId;
+    var yesNoId;
+
+    var transitionUpdate = {
+      mdataId: req.body['transition-mdata'],
+      optinPathId: req.body['transition-optin'],
+      optoutCampaignId: req.body['transition-optout']
+    };
+
+    var yesNoUpdate = {
       incomingOptInPathId: req.body['yesno-incoming-optin'],
       yesPath: req.body['yesno-yes-optin'],
       noPath: req.body['yesno-no-optin']
     };
 
-    YesNoConfig.update(
-      req.params.campaignId,
-      updateValues,
-      function(err, results) {
-        if (err) {
-          return res.status(500).send(err);
-        }
+    // Update the umbrella campaign config
+    CampaignConfig.update(req.params.campaignId, {campaign: req.body['campaign-name']})
+      .then(function(results) {
+        transitionId = results[0].transitionConfig;
+        yesNoId = results[0].yesNoConfig;
 
+        // Update the transition config
+        return CampaignTransitionConfig.update(transitionId, transitionUpdate);
+      })
+      .then(function(results) {
+        // Update the yes/no config
+        return YesNoConfig.update(yesNoId, yesNoUpdate);
+      })
+      .then(function(results) {
         return res.redirect('/config');
+      })
+      .catch(function(err) {
+        return res.status(500).send(err);
       });
   },
 
@@ -105,13 +152,29 @@ module.exports = {
    * Removes a campaign configuration from the database.
    */
   delete: function(req, res) {
-    YesNoConfig.destroy(req.params.campaignId, function(err) {
-      if (err) {
-        return res.status(500).send(err);
-      }
+    var transitionId;
+    var yesNoId;
+    var campaignId = req.params.campaignId;
 
-      return res.redirect('/config');
-    });
+    CampaignConfig.findOne(campaignId)
+      .then(function(result) {
+        transitionId = result.transitionConfig;
+        yesNoId = result.yesNoConfig;
+
+        return CampaignTransitionConfig.destroy(transitionId);
+      })
+      .then(function() {
+        return YesNoConfig.destroy(yesNoId);
+      })
+      .then(function() {
+        return CampaignConfig.destroy(campaignId);
+      })
+      .then(function() {
+        return res.redirect('/config');
+      })
+      .catch(function(err) {
+        return res.status(500).send(err);
+      });
   }
 
 };
