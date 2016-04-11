@@ -46,6 +46,21 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  /**
+   * Admin config views.
+   */
+
+  '/config': 'ConfigController.list',
+  'get /config/new': 'ConfigController.createView',
+  'post /config/new': 'ConfigController.createSubmit',
+  'get /config/:campaignId': 'ConfigController.editView',
+  'post /config/:campaignId': 'ConfigController.editSubmit',
+  'post /config/:campaignId/delete': 'ConfigController.delete',
+
+  /**
+   * API routes.
+   */
+
   // Health check
   'get /health': 'HealthController.check',
 

@@ -11,13 +11,12 @@ module.exports = {
     campaign: {
       type: 'string',
       required: true,
-      defaultsTo: ''
+      unique: true,
     },
 
     // Opt-in path ID the user's message would be coming from.
     incomingOptInPathId: {
       type: 'integer',
-      primaryKey: true,
       unique: true,
       required: true,
     },

@@ -1,0 +1,93 @@
+<h2>SMS Campaign Configuration</h2>
+
+<%
+  var campaignName = '';
+  var incomingPath = '';
+  var yesPath = '';
+  var noPath = '';
+  if (config) {
+    campaignName = config.campaign;
+    incomingPath = config.incomingOptInPathId;
+    yesPath = config.yesPath;
+    noPath = config.noPath;
+  }
+%>
+
+<form method="post" action="/config/<%= id %>">
+
+<div class="form-section">
+  <div class="form-item">
+    <label class="field-label">Campaign name:</label>
+    <input type="text" class="text-field" name="campaign-name" value="<%= campaignName %>" required>
+  </div>
+</div>
+
+<div class="form-section">
+  <h3>Campaign Transitions</h3>
+
+  <p>
+    Configure how the app should handle transitions between Mobile Commons
+    campaigns.
+  </p>
+
+  <p>[WIP]</p>
+</div>
+
+
+<div class="form-section">
+  <h3>Yes/No Routing</h3>
+
+  <p>
+    As a first step in the SMS report back process, we ask the user if they can
+    or cannot send MMS. This determines how we route users based on their response
+  </p>
+
+  <div class="form-item -padded">
+    <p>
+      This is the incoming opt-in path.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174897" target="_blank">
+        [Template equivalent]
+      </a>
+    </p>
+    <label class="field-label">Incoming opt-in path:</label>
+    <input type="number" class="text-field" name="yesno-incoming-optin" value="<%= incomingPath %>">
+  </div>
+
+  <div class="form-item -padded">
+    <p>This is the opt-in path to route the user to if they respond with a 'YES'.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174899" target="_blank">
+        [Template equivalent]
+      </a>
+    </p>
+    <label class="field-label">YES opt-in path:</label>
+    <input type="number" class="text-field" name="yesno-yes-optin" value="<%= yesPath %>">
+  </div>
+
+  <div class="form-item -padded">
+    <p>This is the opt-in path to route the user to if they respond with a 'YES'.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174901" target="_blank">
+        [Template equivalent]
+      </a>
+    </p>
+    <label class="field-label">NO opt-in path:</label>
+    <input type="number" class="text-field" name="yesno-no-optin" value="<%= noPath %>">
+  </div>
+</div>
+
+<div class="form-section">
+  <h3>Report Backs</h3>
+
+  <p>Some description about this thing.</p>
+
+  <p>[WIP]</p>
+</div>
+
+<input type="submit" class="button" value="Submit">
+
+</form>
+
+<div class="form-section">
+  <form method="post" action="/config/<%= id %>/delete" onsubmit="return confirm('Are you sure you want to delete this config?')">
+    <input type="submit" class="button -secondary" value="Delete">
+  </form>
+</div>
