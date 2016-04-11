@@ -296,7 +296,7 @@
 
 <% if (id !== 'new') { %>
 <div class="form-section">
-  <form method="post" action="/config/<%= id %>/delete" onsubmit="return confirm('Are you sure you want to delete this config?')">
+  <form method="post" action="/config/<%= id %>/destroy" onsubmit="return confirm('Are you sure you want to delete this config?')">
     <input type="submit" class="button -secondary" value="Delete">
   </form>
 </div>

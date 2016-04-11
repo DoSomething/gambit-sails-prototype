@@ -50,12 +50,18 @@ module.exports.routes = {
    * Admin config views.
    */
 
-  '/config': 'ConfigController.list',
-  'get /config/new': 'ConfigController.createView',
-  'post /config/new': 'ConfigController.createSubmit',
-  'get /config/:campaignId': 'ConfigController.editView',
-  'post /config/:campaignId': 'ConfigController.editSubmit',
-  'post /config/:campaignId/delete': 'ConfigController.delete',
+  'get  /config': 'ConfigController.index',
+  'get  /config/new': 'ConfigController.new',
+  'post /config/new': 'ConfigController.create',
+  'get  /config/:id': 'ConfigController.findOne',
+  'post /config/:id': 'ConfigController.update',
+  'post /config/:id/destroy': 'ConfigController.destroy',
+
+  // @todo I can't figure out what needs to be done to get something like below to work
+  // instead of explicitly defining all the routes and actions like above.
+  // '/config': {
+  //   controller: 'ConfigController'
+  // },
 
   /**
    * API routes.

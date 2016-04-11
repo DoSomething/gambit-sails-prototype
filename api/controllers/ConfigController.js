@@ -10,7 +10,7 @@ module.exports = {
   /**
    * Display campaigns that have configurations set.
    */
-  list: function(req, res) {
+  index: function(req, res) {
     CampaignConfig.find({})
       .populateAll()
       .then(function(results) {
@@ -24,14 +24,14 @@ module.exports = {
   /**
    * Display view to create a new campaign configuration.
    */
-  createView: function(req, res) {
+  new: function(req, res) {
     return res.view('configCampaign', {id: 'new'});
   },
 
   /**
    * Handle the submission request to create a new campaign configuration.
    */
-  createSubmit: function(req, res) {
+  create: function(req, res) {
     var ctModel;
     var rbModel;
     var ynModel;
@@ -115,8 +115,8 @@ module.exports = {
   /**
    * Display the view to edit an existing campaign configuration.
    */
-  editView: function(req, res) {
-    CampaignConfig.findOne(req.params.campaignId)
+  findOne: function(req, res) {
+  CampaignConfig.findOne(req.params.id)
       .populateAll()
       .then(function(result) {
         if (!result) {
@@ -137,7 +137,7 @@ module.exports = {
   /**
    * Handle the submission request to edit an existing campaign configuration.
    */
-  editSubmit: function(req, res) {
+  update: function(req, res) {
     var reportbackId;
     var transitionId;
     var yesNoId;
@@ -169,7 +169,7 @@ module.exports = {
     };
 
     // Update the umbrella campaign config
-    CampaignConfig.update(req.params.campaignId, {campaign: req.body['campaign-name']})
+    CampaignConfig.update(req.params.id, {campaign: req.body['campaign-name']})
       .then(function(results) {
         reportbackId = results[0].reportbackConfig;
         transitionId = results[0].transitionConfig;
@@ -197,11 +197,11 @@ module.exports = {
   /**
    * Removes a campaign configuration from the database.
    */
-  delete: function(req, res) {
+  destroy: function(req, res) {
     var reportbackId;
     var transitionId;
     var yesNoId;
-    var campaignId = req.params.campaignId;
+    var campaignId = req.params.id;
 
     CampaignConfig.findOne(campaignId)
       .then(function(result) {
