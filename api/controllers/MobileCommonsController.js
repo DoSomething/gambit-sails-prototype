@@ -8,10 +8,34 @@
 module.exports = {
 
   /**
-   * @todo IMPLEMENT ME
+   * Transition users from one Mobile Commons campaign to another. This is done
+   * by opting the user into the optin path of one campaign and opting them out
+   * of another.
    */
   campaignTransition: function(req, res) {
-    res.status(204).send();
+    if (typeof(req.body.mdata_id) === 'undefined') {
+      res.status(204).send();
+      return;
+    }
+
+    var mdataId = parseInt(req.body.mdata_id);
+    CampaignTransitionConfig.findOne({mdataId: mdataId})
+      .then(function(model) {
+        if (typeof model === 'undefined'
+            || typeof model.optinPathId === 'undefined'
+            || typeof model.optoutCampaignId === 'undefined') {
+          throw new Error();
+        }
+
+        MobileCommonsService.optin(req.body.phone, model.optinPathId);
+        MobileCommonsService.optout(req.body.phone, model.optoutCampaignId);
+
+        res.status(200).send();
+      })
+      .catch(function(err) {
+        // Config for that mData is not set.
+        res.status(501).send();
+      });
   },
 
   /**
@@ -49,7 +73,7 @@ module.exports = {
       }
 
       res.status(200).send({phone: req.body.phone, optin: optin});
-      MobileCommonsService.sendSMS(req.body.phone, optin);
+      MobileCommonsService.optin(req.body.phone, optin);
     });
 
   }
