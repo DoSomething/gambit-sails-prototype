@@ -3,28 +3,27 @@ module.exports = {
   migrate: 'safe',
   attributes: {
     // Mobile Commons ID of the campaign just completed
-    campaign_completed_id: {
+    campaignCompletedId: {
       type: 'integer',
       required: true
     },
 
     // Drupal node ID
-    campaign_nid: {
+    campaignNid: {
       type: 'integer',
       required: true,
     },
 
     // Mobile Commons campaign ID to opt user out of
-    campaign_optout_id: {
+    campaignOptoutId: {
       type: 'integer',
       required: true
     },
 
     // Hacky - use this to id a secondary reportback flow when there are multiple
     // flows for a single endpoint value
-    config_override: {
-      type: 'string',
-      required: true
+    configOverride: {
+      type: 'string'
     },
 
     // Resource name used as endpoint in URL
@@ -35,37 +34,37 @@ module.exports = {
     },
 
     // Mobile Commons opt-in path ID for successfully completed report back
-    message_complete: {
+    messageComplete: {
       type: 'integer',
       required: true
     },
 
     // Mobile Commons opt-in path ID for when the MMS response doesn't contain a photo
-    message_not_a_photo: {
+    messageNotAPhoto: {
       type: 'integer',
       required: true
     },
 
     // Mobile Commons opt-in path ID to ask for photo caption
-    message_caption: {
+    messageCaption: {
       type: 'integer',
       required: true
     },
 
     // Mobile Commons opt-in path ID of the error message indicating that the quantity submitted is invalid
-    message_quantity_sent_invalid: {
+    messageQuantitySentInvalid: {
       type: 'integer',
       required: true
     },
 
     // Mobile Commons opt-in path ID to ask for quantity
-    message_quantity: {
+    messageQuantity: {
       type: 'integer',
       required: true
     },
 
     // Mobile Commons opt-in path ID to ask why
-    message_why: {
+    messageWhy: {
       type: 'integer',
       required: true
     },
