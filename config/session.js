@@ -67,11 +67,12 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // adapter: 'mongo',
-  // host: 'localhost',
-  // port: 27017,
-  // db: 'sails',
-  // collection: 'sessions',
+  adapter: 'connect-mongo',
+  url: 'mongodb://localhost:27017/ds-mdata-responder',
+  host: 'localhost',
+  port: 27017,
+  db: 'ds-mdata-responder',
+  collection: 'sessions',
 
   /***************************************************************************
   *                                                                          *

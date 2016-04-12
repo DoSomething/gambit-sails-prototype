@@ -35,4 +35,9 @@ module.exports = {
   //   level: "silent"
   // }
 
+  // Phoenix API settings
+  phoenix: {
+    url: 'https://www.dosomething.org/api/v1'
+  },
+
 };
