@@ -1,12 +1,17 @@
 'use strict';
 
 var request = require('request');
-var ADMIN_ROLE = '3';
 
 module.exports = function(req, res, next) {
   if (typeof req.session.isAdmin !== 'undefined'
       && req.session.isAdmin === true) {
     return next();
+  }
+
+  if (typeof req.body === 'undefined'
+      || typeof req.body.username !== 'string'
+      || typeof req.body.password !== 'string') {
+    return res.redirect('/login');
   }
 
   // Log into Phoenix
@@ -21,12 +26,12 @@ module.exports = function(req, res, next) {
     if (typeof body === 'object'
         && typeof body.user === 'object'
         && typeof body.user.roles === 'object'
-        && Object.keys(body.user.roles).indexOf(ADMIN_ROLE) >= 0) {
+        && Object.keys(body.user.roles).indexOf(PhoenixService.ADMIN_ROLE) >= 0) {
       req.session.isAdmin = true;
       next();
     }
     else {
-      return res.forbidden('You are not permitted to perform this action.');
+      return res.redirect('/login');
     }
   });
 };

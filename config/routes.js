@@ -47,6 +47,12 @@ module.exports.routes = {
   ***************************************************************************/
 
   /**
+   * Login view
+   */
+  'get  /login': 'LoginController.view',
+  'post /login': 'LoginController.login',
+
+  /**
    * Admin config views.
    */
 

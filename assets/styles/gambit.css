@@ -25,6 +25,10 @@ tr {
   padding: 12px;
 }
 
+#login-form {
+  margin: 48px 0;
+}
+
 .field-label + p {
   font-size: 16px;
 }

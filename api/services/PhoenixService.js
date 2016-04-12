@@ -7,6 +7,10 @@
 var request = require('request');
 
 module.exports = {
+  /**
+   * Admin role constant.
+   */
+  ADMIN_ROLE: '3',
 
   /**
    * User login.
