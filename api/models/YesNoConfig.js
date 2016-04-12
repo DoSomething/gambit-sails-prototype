@@ -7,13 +7,6 @@ module.exports = {
   migrate: 'safe',
 
   attributes: {
-    // Name of the campaign this is being used for.
-    campaign: {
-      type: 'string',
-      required: true,
-      unique: true,
-    },
-
     // Opt-in path ID the user's message would be coming from.
     incomingOptInPathId: {
       type: 'integer',
@@ -31,6 +24,11 @@ module.exports = {
     noPath: {
       type: 'integer',
       required: true,
+    },
+
+    // Reference to the campaign config
+    campaign: {
+      model: 'campaignconfig'
     },
   }, 
 };

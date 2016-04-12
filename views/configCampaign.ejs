@@ -2,14 +2,58 @@
 
 <%
   var campaignName = '';
-  var incomingPath = '';
-  var yesPath = '';
-  var noPath = '';
-  if (config) {
+
+  // Campaign Transition config
+  var ctmData = '';
+  var ctOptin = '';
+  var ctOptout = '';
+
+  // Report Back config
+  var rbCampaignCompleted = '';
+  var rbCampaignNid = '';
+  var rbCampaignOptout = '';
+  var rbConfigOverride = '';
+  var rbEndpoint = '';
+  var rbMsgComplete = '';
+  var rbMsgNotAPhoto = '';
+  var rbMsgCaption = '';
+  var rbMsgQuantityInvalid = '';
+  var rbMsgQuantity = '';
+  var rbMsgWhy = '';
+
+  // Yes/No config
+  var ynIncomingPath = '';
+  var ynYesPath = '';
+  var ynNoPath = '';
+
+  if (typeof config !== 'undefined') {
     campaignName = config.campaign;
-    incomingPath = config.incomingOptInPathId;
-    yesPath = config.yesPath;
-    noPath = config.noPath;
+
+    if (typeof config.transitionConfig !== 'undefined') {
+      ctmData = config.transitionConfig.mdataId;
+      ctOptin = config.transitionConfig.optinPathId;
+      ctOptout = config.transitionConfig.optoutCampaignId;
+    }
+
+    if (typeof config.reportbackConfig !== 'undefined') {
+      rbCampaignCompleted = config.reportbackConfig.campaignCompletedId;
+      rbCampaignNid = config.reportbackConfig.campaignNid;
+      rbCampaignOptout = config.reportbackConfig.campaignOptoutId;
+      rbConfigOverride = config.reportbackConfig.configOverride;
+      rbEndpoint = config.reportbackConfig.endpoint;
+      rbMsgComplete = config.reportbackConfig.messageComplete;
+      rbMsgNotAPhoto = config.reportbackConfig.messageNotAPhoto;
+      rbMsgCaption = config.reportbackConfig.messageCaption;
+      rbMsgQuantityInvalid = config.reportbackConfig.messageQuantitySentInvalid;
+      rbMsgQuantity = config.reportbackConfig.messageQuantity;
+      rbMsgWhy = config.reportbackConfig.messageWhy;
+    }
+
+    if (typeof config.yesNoConfig !== 'undefined') {
+      ynIncomingPath = config.yesNoConfig.incomingOptInPathId;
+      ynYesPath = config.yesNoConfig.yesPath;
+      ynNoPath = config.yesNoConfig.noPath;
+    }
   }
 %>
 
@@ -27,10 +71,43 @@
 
   <p>
     Configure how the app should handle transitions between Mobile Commons
-    campaigns.
+    campaigns. This is typically setup as an mData that is triggered by a
+    keyword and leads to the user subscribing to the main campaign.
   </p>
 
-  <p>[WIP]</p>
+  <div class="form-item -padded">
+    <label class="field-label">mData ID:</label>
+    <p>
+      This is the mData ID that triggers the campaign transition.
+      <a href="https://secure.mcommons.com/mdatas/11713" target="_blank">
+        Example: 11713
+      </a>
+    </p>
+    <input type="number" class="text-field" name="transition-mdata" value="<%= ctmData %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Opt-in Path ID:</label>
+    <p>
+      This is the opt-in path ID to subscribe the user to.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174895" target="_blank">
+        Example: 174895
+      </a>
+    </p>
+    <input type="number" class="text-field" name="transition-optin" value="<%= ctOptin %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Opt-out Campaign ID:</label>
+    <p>
+      Not to be mistaken with an opt-in path ID. The value that goes here is the
+      ID of the Mobile Commons campaign that the user should be opted out from.
+      <a href="https://secure.mcommons.com/campaigns/131071" target="_blank">
+        Example: 131071
+      </a>
+    </p>
+    <input type="number" class="text-field" name="transition-optout" value="<%= ctOptout %>">
+  </div>
 </div>
 
 
@@ -43,51 +120,184 @@
   </p>
 
   <div class="form-item -padded">
+    <label class="field-label">Incoming opt-in path ID:</label>
     <p>
       This is the incoming opt-in path.
       <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174897" target="_blank">
-        [Template equivalent]
+        Example: 174897
       </a>
     </p>
-    <label class="field-label">Incoming opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-incoming-optin" value="<%= incomingPath %>">
+    <input type="number" class="text-field" name="yesno-incoming-optin" value="<%= ynIncomingPath %>">
   </div>
 
   <div class="form-item -padded">
+    <label class="field-label">YES opt-in path ID:</label>
     <p>This is the opt-in path to route the user to if they respond with a 'YES'.
       <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174899" target="_blank">
-        [Template equivalent]
+        Example: 174899
       </a>
     </p>
-    <label class="field-label">YES opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-yes-optin" value="<%= yesPath %>">
+    <input type="number" class="text-field" name="yesno-yes-optin" value="<%= ynYesPath %>">
   </div>
 
   <div class="form-item -padded">
-    <p>This is the opt-in path to route the user to if they respond with a 'YES'.
+    <label class="field-label">NO opt-in path ID:</label>
+    <p>This is the opt-in path to route the user to if they respond with a 'NO'.
       <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174901" target="_blank">
-        [Template equivalent]
+        Example: 174901
       </a>
     </p>
-    <label class="field-label">NO opt-in path:</label>
-    <input type="number" class="text-field" name="yesno-no-optin" value="<%= noPath %>">
+    <input type="number" class="text-field" name="yesno-no-optin" value="<%= ynNoPath %>">
   </div>
 </div>
 
 <div class="form-section">
   <h3>Report Backs</h3>
 
-  <p>Some description about this thing.</p>
+  <p>
+    These are the values that help dictate how the SMS report back for this
+    campaign should be handled.
+  </p>
 
-  <p>[WIP]</p>
+  <div class="form-item -padded">
+    <label class="field-label">Endpoint:</label>
+    <p>
+      This is the URL endpoint for the Mobile Commons mData that processes the 
+      report back. For example, if the <a href="https://secure.mcommons.com/mdatas/12535" target="_blank">
+      mData URL</a> is <code>http://ds-mdata-responder.herokuapp.com/reportback/yoteach2016</code>,
+      then the value you put here is <code>yoteach2016</code>.
+    </p>
+    <input type="text" class="text-field" name="rb-endpoint" value="<%= rbEndpoint %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Campaign node ID:</label>
+    <p>
+      This is the campaign's node ID on the website. The app needs this to know
+      where to send completed reportbacks to.
+      <a href="https://www.dosomething.org/us/node/1144" target="_blank">
+        Example: 1144
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-campaign-nid" value="<%= rbCampaignNid %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Ask-caption opt-in path ID:</label>
+    <p>
+      This is the opt-in path asking the user to caption their photo.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/177987" target="_blank">
+        Example: 177987
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-caption" value="<%= rbMsgCaption %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Ask-quantity opt-in path ID:</label>
+    <p>
+      This is the opt-in path asking the user for the report back quantity.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174905" target="_blank">
+        Example: 174905
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-quantity" value="<%= rbMsgQuantity %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">Ask-why opt-in path ID:</label>
+    <p>
+      This is the opt-in path asking the user why this was important to them.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174907" target="_blank">
+        Example: 174907
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-why" value="<%= rbMsgWhy %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">On complete opt-in path ID:</label>
+    <p>
+      This is the opt-in path the user gets after successfully submitting their report back.
+      <a href="https://secure.mcommons.com/campaigns/131075/opt_in_paths/174909" target="_blank">
+        Example: 174909
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-complete" value="<%= rbMsgComplete %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">"Quantity invalid" opt-in path ID:</label>
+    <p>
+      This is the opt-in path for when a user submits an invalid quantity, after
+      being asked for the quantity.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/181469" target="_blank">
+      Example: 181469
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-quantity-invalid" value="<%= rbMsgQuantityInvalid %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">"Not a photo" message opt-in path ID:</label>
+    <p>
+      This is the opt-in path for when a user submits a message that's not a
+      photo, after being asked for a photo.
+      <a href="https://secure.mcommons.com/campaigns/131073/opt_in_paths/174903" target="_blank">
+        Example: 174903
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-msg-not-a-photo" value="<%= rbMsgNotAPhoto %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">"Completed" Mobile Commons campaign ID:</label>
+    <p>
+      This is the Mobile Commons campaign ID the on-complete message is in.
+      <a href="https://secure.mcommons.com/campaigns/131075" target="_blank">
+        Example: 131075
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-campaign-completed-id" value="<%= rbCampaignCompleted %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">"Main Campaign" Mobile Commons campaign ID:</label>
+    <p>
+      This is the Mobile Commons campaign ID for the main campaign that the user
+      will now be opted out from.
+      <a href="https://secure.mcommons.com/campaigns/131073" target="_blank">
+        Example: 131073
+      </a>
+    </p>
+    <input type="number" class="text-field" name="rb-campaign-optout-id" value="<%= rbCampaignOptout %>">
+  </div>
+
+  <div class="form-item -padded">
+    <label class="field-label">(optional) Config override</label>
+    <p>
+      Only meant to be used in rare cases, this can be used to identify a
+      secondary reportback flow that uses the same <code>endpoint</code> value
+      as another configuration.
+      <a href="https://secure.mcommons.com/mdatas/12491" target="_blank">
+        An
+      </a>
+      <a href="https://secure.mcommons.com/mdatas/12493" target="_blank">
+        Example.
+      </a>
+    </p>
+    <input type="text" class="text-field" name="rb-config-override" value="<%= rbConfigOverride %>">
+  </div>
 </div>
 
 <input type="submit" class="button" value="Submit">
 
 </form>
 
+<% if (id !== 'new') { %>
 <div class="form-section">
-  <form method="post" action="/config/<%= id %>/delete" onsubmit="return confirm('Are you sure you want to delete this config?')">
+  <form method="post" action="/config/<%= id %>/destroy" onsubmit="return confirm('Are you sure you want to delete this config?')">
     <input type="submit" class="button -secondary" value="Delete">
   </form>
 </div>
+<% } %>

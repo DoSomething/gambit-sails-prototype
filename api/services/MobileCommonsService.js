@@ -65,9 +65,58 @@ module.exports = {
   },
 
   /**
-   * @todo IMPLEMENT ME
+   * Opt a user out of a Mobile Commons campaign.
+   *
+   * @param phone {string} The user's phone number
+   * @param optoutId {number} ID of the Mobile Commons campaign to unsubscribe
+   *   the user from
    */
-  optout: function() {
+  optout: function(phone, optoutId) {
+    var url = 'https://secure.mcommons.com/api/profile_opt_out';
+    var authEmail = sails.config.mobilecommons.email;
+    var authPass = sails.config.mobilecommons.password;
+
+    var postData = {
+      'auth': {
+        'user': authEmail,
+        'pass': authPass
+      },
+      form: {
+        phone_number: phone,
+        campaign_id: optoutId
+      }
+    };
+
+    // If we're in a test env, just log and emit an event.
+    if (process.env.NODE_ENV == 'test') {
+      console.log('mobilecommons.optout: ', phone, ' | ', optoutId);
+      return;
+    }
+
+    var trace = new Error().stack;
+    var callback = function(error, response, body) {
+      if (error) {
+        console.error('Failed mobilecommons.optout for user: ' + phone
+          + ' | with request payload: ' + JSON.stringify(postData.form)
+          + ' | with error: ' + JSON.stringify(error)
+          + ' | stack: ' + trace);
+      }
+      else if (response) {
+        if (response.statusCode != 200) {
+          console.error('Failed mobilecommons.optout for user: ' + phone
+            + ' | with request payload: ' + JSON.stringify(postData.form)
+            + ' | with code: ' + response.statusCode
+            + ' | body: ' + body + ' | stack: ' + trace);
+        }
+        else {
+          console.log('Success mobilecommons.optout from: ', optoutId);
+        }
+      }
+    };
+
+    var requestRetry = new RequestRetry();
+    requestRetry.setRetryConditions([400, 408, 500]);
+    requestRetry.post(url, postData, callback);
   },
 
   /**

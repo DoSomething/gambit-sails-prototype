@@ -25,6 +25,11 @@ tr {
   padding: 12px;
 }
 
+.field-label + p {
+  font-size: 16px;
+}
+
 .form-section {
   margin: 24px 0 48px 0;
 }
+
