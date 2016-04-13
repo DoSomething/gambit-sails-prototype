@@ -37,7 +37,8 @@ module.exports = {
 
   // Phoenix API settings
   phoenix: {
-    url: 'https://www.dosomething.org/api/v1'
+    url: 'https://www.dosomething.org/api/v1',
+    loginOnBootstrap: true
   },
 
 };
